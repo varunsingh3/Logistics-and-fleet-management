@@ -66,7 +66,10 @@ app.use(express.static(frontendPath));
 
 // Fallback route for non-API calls to index.html (Express 5 compatible)
 app.use((req, res, next) => {
-  if (req.originalUrl.startsWith('/api')) {
+  if (req.originalUrl === '/api.js' || req.originalUrl.startsWith('/api.js?')) {
+    return res.sendFile(path.join(frontendPath, 'logifleet.js'));
+  }
+  if (req.originalUrl.startsWith('/api/')) {
     return res.status(404).json({
       success: false,
       message: `API endpoint '${req.originalUrl}' not found.`,
