@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const express = require('express');
 const cors = require('cors');
@@ -60,23 +61,71 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve frontend static files if requested through backend port (e.g. http://localhost:5000)
+// Helper to resolve frontend files whether running locally or on Vercel
+const getFrontendFile = (relPath) => {
+  const candidates = [
+    path.join(process.cwd(), relPath),
+    path.join(__dirname, '../../', relPath),
+    path.join(__dirname, '../', relPath),
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
+  }
+  return null;
+};
+
+// Serve static assets from both cwd and relative frontendPath
 const frontendPath = path.join(__dirname, '../../');
+app.use(express.static(process.cwd()));
 app.use(express.static(frontendPath));
 
-// Fallback route for non-API calls to index.html (Express 5 compatible)
+// Page & asset router for Vercel and local hosting
 app.use((req, res, next) => {
-  if (req.originalUrl === '/api.js' || req.originalUrl.startsWith('/api.js?')) {
-    return res.sendFile(path.join(frontendPath, 'logifleet.js'));
-  }
+  // If API route that didn't match any controller
   if (req.originalUrl.startsWith('/api/')) {
     return res.status(404).json({
       success: false,
       message: `API endpoint '${req.originalUrl}' not found.`,
     });
   }
-  // If static file requested
-  res.sendFile(path.join(frontendPath, 'index.html'));
+
+  // Script aliases
+  if (req.path === '/api.js' || req.path === '/logifleet.js') {
+    const file = getFrontendFile('logifleet.js') || getFrontendFile('api.js');
+    if (file) {
+      res.setHeader('Content-Type', 'application/javascript');
+      return res.sendFile(file);
+    }
+  }
+
+  // Remove leading slash and query params
+  const cleanPath = req.path.replace(/^\//, '').split('?')[0];
+
+  // Specific file requested directly (e.g. dashboard.html, fleet.html, etc.)
+  if (cleanPath && (cleanPath.endsWith('.html') || cleanPath.endsWith('.js') || cleanPath.endsWith('.css') || cleanPath.endsWith('.ico'))) {
+    const file = getFrontendFile(cleanPath);
+    if (file) return res.sendFile(file);
+  }
+
+  // Friendly clean URLs mapping: /dashboard -> dashboard.html, /fleet -> fleet.html, etc.
+  const pageMap = {
+    '': 'index.html',
+    'index': 'index.html',
+    'login': 'login.html',
+    'dashboard': 'dashboard.html',
+    'fleet': 'fleet.html',
+    'warehouse': 'warehouse.html',
+    'shipments': 'shipments.html',
+    'transport': 'transport.html',
+  };
+
+  const targetFile = pageMap[cleanPath] || (cleanPath ? `${cleanPath}.html` : 'index.html');
+  const file = getFrontendFile(targetFile) || getFrontendFile('index.html');
+  if (file) {
+    return res.sendFile(file);
+  }
+
+  next();
 });
 
 // Centralized error handler
