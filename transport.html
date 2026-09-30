@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LogiFleet - Transport</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial;background:#f4f7fb;color:#172033}
+
+nav{
+height:80px;background:#151c30;display:flex;
+align-items:center;justify-content:space-between;
+padding:0 10%;color:white
+}
+
+.logo{font-size:30px;font-weight:bold}
+.logo span{color:#20b9f1}
+
+nav ul{display:flex;gap:30px;list-style:none;align-items:center;}
+nav a{color:#ddd;text-decoration:none;font-weight:bold}
+nav a:hover{color:#20b9f1}
+
+.login{
+background:#2867e8;
+padding:12px 22px;
+border-radius:8px
+}
+
+/* HEADER */
+
+.hero{
+background:#0f172a;color:white;
+padding:55px 10%
+}
+
+.hero h1{
+font-size:45px;
+margin-bottom:12px
+}
+
+.hero span{color:#20b9f1}
+.hero p{color:#b8c3d4}
+
+/* CONTENT */
+
+.container{
+width:80%;
+max-width:1200px;
+margin:40px auto
+}
+
+.search{
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 5px 20px #0001;
+margin-bottom:30px
+}
+
+.search h2{margin-bottom:18px}
+
+.form{
+display:grid;
+grid-template-columns:1fr 1fr 1fr auto auto;
+gap:12px
+}
+
+input,select{
+padding:13px;
+border:1px solid #ddd;
+border-radius:7px;
+font-size:14px;
+outline:none;
+}
+
+input:focus, select:focus{
+border-color:#2867e8;
+}
+
+button{
+background:#2867e8;
+color:white;
+border:0;
+padding:13px 20px;
+border-radius:7px;
+cursor:pointer;
+font-weight:bold;
+transition:.2s;
+}
+
+button:hover{
+background:#1a54cc;
+}
+
+.reset-btn{
+background:#64748b;
+}
+.reset-btn:hover{
+background:#475569;
+}
+
+.add-btn{
+background:#10b981;
+}
+.add-btn:hover{
+background:#059669;
+}
+
+/* ROUTES */
+
+.routes-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.routes{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px
+}
+
+.route{
+background:white;
+padding:22px;
+border-radius:10px;
+box-shadow:0 5px 20px #0001;
+position:relative;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+transition:transform .2s;
+}
+
+.route:hover{
+transform:translateY(-3px);
+}
+
+.route-top-row{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+margin-bottom:10px;
+}
+
+.route h3{
+font-size:18px;
+color:#111827;
+}
+
+.route-badge{
+background:#eff6ff;
+color:#2563eb;
+padding:4px 8px;
+border-radius:5px;
+font-size:11px;
+font-weight:bold;
+}
+
+.time{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin:15px 0;
+font-size:18px;
+font-weight:bold;
+background:#f8fafc;
+padding:10px 14px;
+border-radius:8px;
+}
+
+.arrow{color:#20b9f1}
+
+.route p{
+color:#64748b;
+margin:5px 0;
+font-size:14px;
+}
+
+.route-price{
+font-size:18px;
+font-weight:bold;
+color:#16a34a;
+margin:8px 0;
+}
+
+.book{
+width:100%;
+margin-top:12px;
+background:#2867e8;
+}
+
+.book:disabled{
+background:#cbd5e1;
+cursor:not-allowed;
+}
+
+.admin-actions{
+display:flex;
+gap:6px;
+margin-top:8px;
+}
+
+.admin-actions button{
+flex:1;
+padding:6px;
+font-size:11px;
+border-radius:5px;
+}
+
+.edit-btn{
+background:#e0e7ff;color:#3730a3;
+}
+.edit-btn:hover{background:#c7d2fe;}
+.del-btn{
+background:#fee2e2;color:#991b1b;
+}
+.del-btn:hover{background:#fecaca;}
+
+.modal-field{
+margin-bottom:14px;
+}
+.modal-field label{
+display:block;
+font-size:12px;
+font-weight:bold;
+color:#334155;
+margin-bottom:6px;
+}
+.modal-field input, .modal-field select{
+width:100%;
+padding:10px 12px;
+border:1px solid #cbd5e1;
+border-radius:6px;
+font-size:14px;
+box-sizing:border-box;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+nav ul li:not(:last-child){display:none}
+.container{width:90%}
+.form{grid-template-columns:1fr 1fr}
+.routes{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:600px){
+.form{grid-template-columns:1fr}
+.routes{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+<div class="logo">
+Logi<span>Fleet</span>
+</div>
+
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="fleet.html">Fleet</a></li>
+<li><a href="warehouse.html">Warehouse</a></li>
+<li><a href="shipments.html">Shipments</a></li>
+<li><a href="transport.html" style="color:#20b9f1">Transport</a></li>
+<li><a href="dashboard.html">Dashboard</a></li>
+<li><a href="login.html" class="login">Login</a></li>
+</ul>
+
+</nav>
+
+
+<!-- HEADER -->
+
+<section class="hero">
+
+<h1>
+Public <span>Transport</span>
+</h1>
+
+<p>
+Find routes, check schedules and book your tickets.
+</p>
+
+</section>
+
+
+<!-- CONTENT -->
+
+<div class="container">
+
+<!-- SEARCH -->
+
+<div class="search">
+
+<h2>Find a Bus</h2>
+
+<form class="form" id="routeSearchForm" onsubmit="event.preventDefault(); loadRoutes();">
+
+<input type="text" id="searchFrom" placeholder="From (e.g. Delhi)">
+
+<input type="text" id="searchTo" placeholder="To (e.g. Noida)">
+
+<input type="date" id="searchDate">
+
+<button type="submit">Search</button>
+
+<button type="button" class="reset-btn" onclick="resetSearch()">Reset</button>
+
+</form>
+
+</div>
+
+
+<!-- ROUTES -->
+
+<div class="routes-header">
+    <h2>Available Routes</h2>
+    <button class="add-btn" id="btnAddRoute" style="display:none;" onclick="openAddRouteModal()">
+        + Add Route
+    </button>
+</div>
+
+<div class="routes" id="routesGrid">
+    <div style="grid-column:1/-1;text-align:center;padding:40px;color:#94a3b8;background:white;border-radius:10px;">
+        Loading transport schedules...
+    </div>
+</div>
+
+</div>
+
+<script src="api.js"></script>
+
+<script>
+let routesList = [];
+
+async function loadRoutes() {
+    try {
+        const from = document.getElementById('searchFrom').value.trim();
+        const to = document.getElementById('searchTo').value.trim();
+        const date = document.getElementById('searchDate').value;
+
+        const params = new URLSearchParams();
+        if (from) params.set('from', from);
+        if (to) params.set('to', to);
+        if (date) params.set('date', date);
+
+        const res = await LogiFleetAPI.get(`/routes?${params.toString()}`);
+        if (res.success) {
+            routesList = res.data;
+            renderRoutes(routesList);
+        }
+
+        // Show add button for admin/manager
+        if (LogiFleetAuth.hasRole('admin', 'manager')) {
+            document.getElementById('btnAddRoute').style.display = 'block';
+        }
+    } catch (err) {
+        console.error('Error loading routes:', err);
+        showToast('Unable to load routes', 'error');
+    }
+}
+
+function resetSearch() {
+    document.getElementById('searchFrom').value = '';
+    document.getElementById('searchTo').value = '';
+    document.getElementById('searchDate').value = '';
+    loadRoutes();
+}
+
+function renderRoutes(routes) {
+    const grid = document.getElementById('routesGrid');
+    if (!routes || routes.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:40px;color:#94a3b8;background:white;border-radius:10px;">
+                No buses found for the selected route. Try another search or reset filters.
+            </div>
+        `;
+        return;
+    }
+
+    const canManage = LogiFleetAuth.hasRole('admin', 'manager');
+    const isAdmin = LogiFleetAuth.hasRole('admin');
+
+    grid.innerHTML = routes.map(r => {
+        const isSoldOut = (r.availableSeats || 0) <= 0;
+
+        return `
+            <div class="route">
+                <div>
+                    <div class="route-top-row">
+                        <h3>${escapeHtml(r.origin)} → ${escapeHtml(r.destination)}</h3>
+                        <span class="route-badge">Route: ${escapeHtml(r.routeId)}</span>
+                    </div>
+
+                    <div class="time">
+                        <span>${escapeHtml(r.departureTime)}</span>
+                        <span class="arrow">→</span>
+                        <span>${escapeHtml(r.arrivalTime)}</span>
+                    </div>
+
+                    <p>Duration: <strong>${escapeHtml(r.duration)}</strong></p>
+                    <p>Seats Available: <strong>${r.availableSeats}</strong> of ${r.totalSeats}</p>
+                    <p class="route-price">₹${r.price || 150} <small style="font-size:12px;font-weight:normal;color:#64748b;">/ passenger</small></p>
+                </div>
+
+                <div>
+                    <button class="book" onclick="openBookModal('${r._id}')" ${isSoldOut ? 'disabled' : ''}>
+                        ${isSoldOut ? 'Sold Out' : 'Book Ticket'}
+                    </button>
+
+                    ${canManage ? `
+                        <div class="admin-actions">
+                            <button class="edit-btn" onclick="openEditRouteModal('${r._id}')">Edit</button>
+                            ${isAdmin ? `<button class="del-btn" onclick="deleteRoute('${r._id}', '${escapeHtml(r.routeId)}')">Delete</button>` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// BOOK TICKET MODAL
+function openBookModal(routeId) {
+    const r = routesList.find(item => item._id === routeId);
+    if (!r) return;
+
+    const user = LogiFleetAuth.getUser();
+    const defaultName = user ? user.name : '';
+    const defaultEmail = user ? user.email : '';
+    const pricePerSeat = r.price || 150;
+
+    const formHtml = `
+        <div style="background:#f1f5f9;padding:12px;border-radius:8px;margin-bottom:16px;">
+            <div style="font-weight:bold;font-size:16px;color:#1e293b;">${escapeHtml(r.origin)} → ${escapeHtml(r.destination)}</div>
+            <div style="font-size:13px;color:#64748b;margin-top:4px;">
+                Departure: <strong>${escapeHtml(r.departureTime)}</strong> | Seats Left: <strong>${r.availableSeats}</strong>
+            </div>
+        </div>
+
+        <div class="modal-field">
+            <label>Passenger Full Name</label>
+            <input type="text" id="bookName" value="${escapeHtml(defaultName)}" placeholder="e.g. Rahul Sharma" required>
+        </div>
+
+        <div class="modal-field">
+            <label>Email Address (Ticket Confirmation)</label>
+            <input type="email" id="bookEmail" value="${escapeHtml(defaultEmail)}" placeholder="e.g. rahul@example.com" required>
+        </div>
+
+        <div class="modal-field">
+            <label>Mobile Number</label>
+            <input type="tel" id="bookPhone" placeholder="e.g. +91 98765 43210">
+        </div>
+
+        <div class="modal-field">
+            <label>Number of Seats</label>
+            <input type="number" id="bookSeats" value="1" min="1" max="${r.availableSeats}" oninput="calcTotal(${pricePerSeat})" required>
+        </div>
+
+        <div style="background:#ecfdf5;border:1px solid #a7f3d0;padding:12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-weight:bold;color:#065f46;">Total Fare:</span>
+            <span style="font-size:20px;font-weight:bold;color:#047857;" id="bookTotalPrice">₹${pricePerSeat}</span>
+        </div>
+    `;
+
+    openModal({
+        title: `Book Ticket: ${r.routeId}`,
+        contentHtml: formHtml,
+        confirmText: 'Confirm & Book',
+        onConfirm: async () => {
+            const passengerName = document.getElementById('bookName').value.trim();
+            const passengerEmail = document.getElementById('bookEmail').value.trim();
+            const passengerPhone = document.getElementById('bookPhone').value.trim();
+            const seatCount = Number(document.getElementById('bookSeats').value) || 1;
+
+            if (!passengerName || !passengerEmail) {
+                showToast('Please provide passenger name and email', 'warning');
+                return false;
+            }
+
+            if (seatCount > r.availableSeats) {
+                showToast(`Only ${r.availableSeats} seat(s) available`, 'error');
+                return false;
+            }
+
+            const res = await LogiFleetAPI.post(`/routes/${routeId}/book`, {
+                passengerName,
+                passengerEmail,
+                passengerPhone,
+                seatCount,
+            });
+
+            showToast(`✓ Ticket booked! Booking ID: ${res.booking.bookingId}`, 'success', 6000);
+            loadRoutes();
+            return true;
+        },
+    });
+}
+
+function calcTotal(pricePerSeat) {
+    const seats = Number(document.getElementById('bookSeats').value) || 1;
+    document.getElementById('bookTotalPrice').innerText = `₹${seats * pricePerSeat}`;
+}
+
+// ADD ROUTE MODAL
+function openAddRouteModal() {
+    const formHtml = `
+        <div class="modal-field">
+            <label>Route ID (e.g. LF-701)</label>
+            <input type="text" id="newRouteId" placeholder="LF-701" required>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="modal-field">
+                <label>Origin City</label>
+                <input type="text" id="newOrigin" placeholder="e.g. Delhi" required>
+            </div>
+            <div class="modal-field">
+                <label>Destination City</label>
+                <input type="text" id="newDest" placeholder="e.g. Agra" required>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="modal-field">
+                <label>Departure Time</label>
+                <input type="text" id="newDepTime" placeholder="e.g. 09:00 AM" required>
+            </div>
+            <div class="modal-field">
+                <label>Arrival Time</label>
+                <input type="text" id="newArrTime" placeholder="e.g. 12:00 PM" required>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+            <div class="modal-field">
+                <label>Duration</label>
+                <input type="text" id="newDuration" placeholder="e.g. 3 hours" required>
+            </div>
+            <div class="modal-field">
+                <label>Total Seats</label>
+                <input type="number" id="newSeats" value="40" required>
+            </div>
+            <div class="modal-field">
+                <label>Fare (₹)</label>
+                <input type="number" id="newPrice" value="250" required>
+            </div>
+        </div>
+    `;
+
+    openModal({
+        title: 'Add New Transport Route',
+        contentHtml: formHtml,
+        confirmText: 'Schedule Route',
+        onConfirm: async () => {
+            const routeId = document.getElementById('newRouteId').value.trim();
+            const origin = document.getElementById('newOrigin').value.trim();
+            const destination = document.getElementById('newDest').value.trim();
+            const departureTime = document.getElementById('newDepTime').value.trim();
+            const arrivalTime = document.getElementById('newArrTime').value.trim();
+            const duration = document.getElementById('newDuration').value.trim();
+            const totalSeats = Number(document.getElementById('newSeats').value);
+            const price = Number(document.getElementById('newPrice').value);
+
+            if (!routeId || !origin || !destination || !departureTime || !arrivalTime) {
+                showToast('Please fill all required fields', 'warning');
+                return false;
+            }
+
+            const res = await LogiFleetAPI.post('/routes', {
+                routeId,
+                origin,
+                destination,
+                departureTime,
+                arrivalTime,
+                duration,
+                totalSeats,
+                availableSeats: totalSeats,
+                price,
+            });
+
+            showToast(res.message || 'Route scheduled successfully', 'success');
+            loadRoutes();
+            return true;
+        },
+    });
+}
+
+// EDIT ROUTE MODAL
+function openEditRouteModal(id) {
+    const r = routesList.find(item => item._id === id);
+    if (!r) return;
+
+    const formHtml = `
+        <div class="modal-field">
+            <label>Route ID</label>
+            <input type="text" value="${escapeHtml(r.routeId)}" disabled style="background:#f1f5f9;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="modal-field">
+                <label>Origin</label>
+                <input type="text" id="editOrigin" value="${escapeHtml(r.origin)}" required>
+            </div>
+            <div class="modal-field">
+                <label>Destination</label>
+                <input type="text" id="editDest" value="${escapeHtml(r.destination)}" required>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="modal-field">
+                <label>Departure</label>
+                <input type="text" id="editDep" value="${escapeHtml(r.departureTime)}" required>
+            </div>
+            <div class="modal-field">
+                <label>Arrival</label>
+                <input type="text" id="editArr" value="${escapeHtml(r.arrivalTime)}" required>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="modal-field">
+                <label>Available Seats</label>
+                <input type="number" id="editAvail" value="${r.availableSeats}" required>
+            </div>
+            <div class="modal-field">
+                <label>Ticket Price (₹)</label>
+                <input type="number" id="editPrice" value="${r.price || 150}" required>
+            </div>
+        </div>
+    `;
+
+    openModal({
+        title: `Edit Route ${r.routeId}`,
+        contentHtml: formHtml,
+        confirmText: 'Save Route',
+        onConfirm: async () => {
+            const origin = document.getElementById('editOrigin').value.trim();
+            const destination = document.getElementById('editDest').value.trim();
+            const departureTime = document.getElementById('editDep').value.trim();
+            const arrivalTime = document.getElementById('editArr').value.trim();
+            const availableSeats = Number(document.getElementById('editAvail').value);
+            const price = Number(document.getElementById('editPrice').value);
+
+            const res = await LogiFleetAPI.put(`/routes/${id}`, {
+                origin,
+                destination,
+                departureTime,
+                arrivalTime,
+                availableSeats,
+                price,
+            });
+
+            showToast(res.message || 'Route updated', 'success');
+            loadRoutes();
+            return true;
+        },
+    });
+}
+
+// DELETE ROUTE
+async function deleteRoute(id, routeId) {
+    if (!confirm(`Are you sure you want to delete route ${routeId}?`)) return;
+
+    try {
+        const res = await LogiFleetAPI.delete(`/routes/${id}`);
+        showToast(res.message || 'Route deleted', 'success');
+        loadRoutes();
+    } catch (err) {
+        showToast(err.message || 'Failed to delete route', 'error');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadRoutes);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LogiFleet | Authentication</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+    linear-gradient(135deg,#061226ee,#071a31dd),
+    url("https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1800&q=85")
+    center/cover;
+
+    color:#172033;
+    padding: 20px 0;
+}
+
+.login-container{
+    width:420px;
+    max-width:90%;
+
+    background:#ffffffee;
+
+    padding:40px;
+
+    border-radius:18px;
+
+    box-shadow:0 25px 70px #0008;
+
+    backdrop-filter:blur(15px);
+}
+
+.logo{
+    text-align:center;
+
+    font-size:30px;
+    font-weight:bold;
+
+    color:#111827;
+
+    margin-bottom:8px;
+}
+
+.logo span{
+    color:#20b9f1;
+}
+
+.subtitle{
+    text-align:center;
+
+    color:#718096;
+
+    font-size:14px;
+
+    margin-bottom:20px;
+}
+
+/* AUTH TABS */
+.auth-tabs{
+    display:flex;
+    background:#e2e8f0;
+    border-radius:8px;
+    padding:4px;
+    margin-bottom:24px;
+}
+
+.tab-btn{
+    flex:1;
+    padding:9px;
+    border:0;
+    background:none;
+    border-radius:6px;
+    font-weight:bold;
+    font-size:13px;
+    color:#64748b;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.tab-btn.active{
+    background:white;
+    color:#111827;
+    box-shadow:0 2px 6px #0002;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    margin-bottom:8px;
+}
+
+input, select{
+    width:100%;
+
+    padding:13px 15px;
+
+    border:1px solid #d8e0ea;
+
+    border-radius:8px;
+
+    outline:none;
+
+    font-size:14px;
+
+    transition:.3s;
+    background:white;
+}
+
+input:focus, select:focus{
+    border-color:#2867e8;
+
+    box-shadow:0 0 0 3px #2867e815;
+}
+
+.login-btn{
+    width:100%;
+
+    padding:14px;
+
+    border:0;
+
+    border-radius:8px;
+
+    background:#2867e8;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.login-btn:hover{
+    background:#1855d4;
+
+    transform:translateY(-2px);
+}
+
+.login-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.message{
+    margin-top:15px;
+
+    text-align:center;
+
+    font-size:13px;
+
+    display:none;
+    padding:10px;
+    border-radius:6px;
+}
+
+.error{
+    color:#dc2626;
+    background:#fee2e2;
+    border:1px solid #fecaca;
+}
+
+.success{
+    color:#15803d;
+    background:#dcfce7;
+    border:1px solid #bbf7d0;
+}
+
+.demo{
+    margin-top:25px;
+
+    padding:15px;
+
+    background:#f1f7ff;
+
+    border-radius:8px;
+
+    font-size:12px;
+
+    color:#526174;
+}
+
+.demo-title{
+    font-weight:bold;
+    margin-bottom:8px;
+    color:#1e293b;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.demo-btn-group{
+    display:flex;
+    gap:6px;
+    margin-top:8px;
+}
+
+.demo-fill-btn{
+    flex:1;
+    padding:6px 4px;
+    background:#2867e815;
+    border:1px solid #2867e830;
+    color:#2867e8;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.demo-fill-btn:hover{
+    background:#2867e8;
+    color:white;
+}
+
+.back{
+    display:block;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#2867e8;
+
+    font-size:13px;
+
+    font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="login-container">
+
+<div class="logo">
+    Logi<span>Fleet</span>
+</div>
+
+<p class="subtitle" id="formSubtitle">
+    Sign in to your logistics management dashboard
+</p>
+
+<!-- TABS: Sign In / Register -->
+<div class="auth-tabs">
+    <button type="button" class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+    <button type="button" class="tab-btn" id="tabRegister" onclick="switchTab('register')">Create Account</button>
+</div>
+
+<!-- LOGIN FORM -->
+<form id="loginForm">
+
+<div class="form-group">
+<label for="email">
+    Email Address
+</label>
+<input
+type="email"
+id="email"
+placeholder="Enter your email"
+required>
+</div>
+
+<div class="form-group">
+<label for="password">
+    Password
+</label>
+<input
+type="password"
+id="password"
+placeholder="Enter your password"
+required>
+</div>
+
+<button
+type="submit"
+id="loginSubmitBtn"
+class="login-btn">
+    Login to Dashboard →
+</button>
+
+</form>
+
+<!-- REGISTER FORM -->
+<form id="registerForm" style="display:none;">
+
+<div class="form-group">
+<label for="regName">Full Name</label>
+<input type="text" id="regName" placeholder="e.g. Varun Singh" required>
+</div>
+
+<div class="form-group">
+<label for="regEmail">Email Address</label>
+<input type="email" id="regEmail" placeholder="e.g. varun@logifleet.com" required>
+</div>
+
+<div class="form-group">
+<label for="regPassword">Password (min 6 characters)</label>
+<input type="password" id="regPassword" placeholder="Create a password" required minlength="6">
+</div>
+
+<div class="form-group">
+<label for="regRole">Role</label>
+<select id="regRole">
+    <option value="user">User (Track shipments & Book transport)</option>
+    <option value="manager">Manager (Manage Fleet, Warehouses & Shipments)</option>
+    <option value="admin">Admin (Full System Access)</option>
+</select>
+</div>
+
+<button
+type="submit"
+id="registerSubmitBtn"
+class="login-btn">
+    Create Account →
+</button>
+
+</form>
+
+<div
+id="message"
+class="message">
+</div>
+
+<!-- DEMO CREDENTIALS BOX WITH 1-CLICK AUTOFILL -->
+<div class="demo">
+    <div class="demo-title">
+        <span>Quick Demo Credentials</span>
+        <span style="font-size:10px;color:#64748b;">(Click to auto-fill)</span>
+    </div>
+    <div class="demo-btn-group">
+        <button type="button" class="demo-fill-btn" onclick="fillDemo('varunsingh123@gmail.com', 'varun123')">
+            Varun (Admin)
+        </button>
+        <button type="button" class="demo-fill-btn" onclick="fillDemo('manager@logifleet.com', 'manager123')">
+            Manager
+        </button>
+        <button type="button" class="demo-fill-btn" onclick="fillDemo('user@logifleet.com', 'user123')">
+            User
+        </button>
+    </div>
+</div>
+
+<a
+href="index.html"
+class="back">
+← Back to Home
+</a>
+
+</div>
+
+<script src="api.js"></script>
+
+<script>
+let currentTab = 'login';
+
+function switchTab(tab) {
+    currentTab = tab;
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const subtitle = document.getElementById('formSubtitle');
+    const msg = document.getElementById('message');
+    msg.style.display = 'none';
+
+    if (tab === 'login') {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        subtitle.innerText = 'Sign in to your logistics management dashboard';
+    } else {
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+        registerForm.style.display = 'block';
+        loginForm.style.display = 'none';
+        subtitle.innerText = 'Register for a new LogiFleet account';
+    }
+}
+
+function fillDemo(email, pass) {
+    switchTab('login');
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = pass;
+    showToast('Credentials filled. Click Login to proceed!', 'info', 2000);
+}
+
+function showMsg(text, isError = false) {
+    const msg = document.getElementById('message');
+    msg.style.display = 'block';
+    msg.className = isError ? 'message error' : 'message success';
+    msg.innerHTML = (isError ? '✕ ' : '✓ ') + text;
+}
+
+// LOGIN SUBMIT
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('loginSubmitBtn');
+
+    btn.disabled = true;
+    btn.innerText = 'Authenticating...';
+
+    try {
+        const response = await LogiFleetAPI.post('/auth/login', { email, password });
+        showMsg('Login successful! Redirecting to dashboard...', false);
+        LogiFleetAuth.setAuth(response.token, response.user);
+
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 800);
+    } catch (err) {
+        showMsg(err.message || 'Invalid email or password.', true);
+        btn.disabled = false;
+        btn.innerText = 'Login to Dashboard →';
+    }
+});
+
+// REGISTER SUBMIT
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const role = document.getElementById('regRole').value;
+    const btn = document.getElementById('registerSubmitBtn');
+
+    btn.disabled = true;
+    btn.innerText = 'Creating account...';
+
+    try {
+        const response = await LogiFleetAPI.post('/auth/register', { name, email, password, role });
+        showMsg('Account created successfully! Opening dashboard...', false);
+        LogiFleetAuth.setAuth(response.token, response.user);
+
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 800);
+    } catch (err) {
+        showMsg(err.message || 'Registration failed.', true);
+        btn.disabled = false;
+        btn.innerText = 'Create Account →';
+    }
+});
+</script>
+
+</body>
+</html>

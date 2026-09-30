@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LogiFleet | Smart Logistics Management</title>
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    color:#172033;
+    background:#fff;
+}
+
+a{
+    text-decoration:none;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+nav{
+    height:78px;
+    background:#111827;
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 8%;
+
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+
+    z-index:1000;
+
+    box-shadow:0 4px 20px #0004;
+}
+
+.logo{
+    font-size:29px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#20b9f1;
+}
+
+nav ul{
+    display:flex;
+    align-items:center;
+    gap:27px;
+    list-style:none;
+}
+
+nav a{
+    color:#dbe2ee;
+    font-weight:bold;
+    font-size:15px;
+    transition:.3s;
+}
+
+nav a:hover{
+    color:#20b9f1;
+}
+
+.login{
+    background:#2867e8;
+    color:white !important;
+    padding:11px 20px;
+    border-radius:8px;
+}
+
+.login:hover{
+    background:#1f56c7;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    min-height:100vh;
+
+    padding-top:78px;
+
+    color:white;
+
+    position:relative;
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+
+    background:
+        radial-gradient(
+            circle at 80% 45%,
+            #12456c 0%,
+            transparent 28%
+        ),
+        linear-gradient(
+            90deg,
+            #071226 0%,
+            #071226f5 45%,
+            #071226d9 100%
+        );
+}
+
+.hero::before{
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    right:-100px;
+    top:100px;
+
+    border-radius:50%;
+
+    background:#20b9f112;
+
+    filter:blur(40px);
+}
+
+.hero-content{
+    width:84%;
+    max-width:1350px;
+
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:1fr 1.05fr;
+
+    align-items:center;
+
+    gap:30px;
+
+    position:relative;
+    z-index:2;
+}
+
+.hero-text{
+    position:relative;
+    z-index:10;
+}
+
+.tag{
+    display:inline-block;
+
+    border:1px solid #20b9f1;
+
+    color:#50cdf5;
+
+    padding:10px 17px;
+
+    border-radius:30px;
+
+    font-size:13px;
+    font-weight:bold;
+
+    margin-bottom:25px;
+
+    background:#20b9f10c;
+
+    box-shadow:0 0 20px #20b9f114;
+}
+
+h1{
+    font-size:72px;
+    line-height:1.02;
+    max-width:800px;
+}
+
+h1 span{
+    color:#20b9f1;
+}
+
+.hero p{
+    max-width:720px;
+
+    color:#dce5f1;
+
+    font-size:18px;
+    line-height:1.7;
+
+    margin:25px 0;
+}
+
+.buttons{
+    display:flex;
+    gap:14px;
+
+    margin-bottom:55px;
+}
+
+.btn{
+    padding:15px 24px;
+
+    border-radius:8px;
+
+    font-weight:bold;
+
+    display:inline-block;
+
+    transition:.3s;
+}
+
+.primary{
+    background:#2867e8;
+    color:white;
+
+    box-shadow:0 8px 20px #2867e844;
+}
+
+.secondary{
+    border:1px solid #8090a8;
+    color:white;
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+    opacity:.9;
+}
+
+.stats{
+    display:flex;
+    gap:60px;
+}
+
+.stats h2{
+    font-size:29px;
+}
+
+.stats p{
+    font-size:14px;
+    color:#b9c5d6;
+    margin:5px 0;
+}
+
+
+/* =========================================================
+   3D LOGISTICS SCENE
+========================================================= */
+
+.scene{
+    height:600px;
+
+    position:relative;
+
+    perspective:1200px;
+
+    overflow:hidden;
+}
+
+.scene::before{
+    content:"";
+
+    position:absolute;
+
+    width:450px;
+    height:450px;
+
+    border-radius:50%;
+
+    background:#20b9f11a;
+
+    filter:blur(50px);
+
+    top:70px;
+    right:30px;
+
+    animation:glow 4s ease-in-out infinite;
+}
+
+@keyframes glow{
+
+    0%,100%{
+        transform:scale(1);
+        opacity:.5;
+    }
+
+    50%{
+        transform:scale(1.15);
+        opacity:.9;
+    }
+}
+
+
+/* =========================================================
+   3D GROUND
+========================================================= */
+
+.ground{
+    position:absolute;
+
+    width:720px;
+    height:360px;
+
+    left:50%;
+    top:54%;
+
+    transform:
+        translate(-50%,-50%)
+        rotateX(62deg)
+        rotateZ(-8deg);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 49%,
+            #20b9f155 50%,
+            transparent 51%
+        ),
+        repeating-linear-gradient(
+            90deg,
+            #101c2e 0px,
+            #101c2e 90px,
+            #142238 91px,
+            #142238 180px
+        );
+
+    border:1px solid #20b9f126;
+
+    box-shadow:0 0 50px #0008;
+}
+
+
+/* =========================================================
+   ROAD
+========================================================= */
+
+.road{
+    position:absolute;
+
+    width:700px;
+    height:105px;
+
+    left:50%;
+    bottom:82px;
+
+    transform:
+        translateX(-50%)
+        rotateX(57deg)
+        rotateZ(-8deg);
+
+    background:#1a2637;
+
+    border-top:2px solid #34445c;
+    border-bottom:2px solid #34445c;
+
+    box-shadow:0 10px 25px #0008;
+}
+
+.road::after{
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    top:50%;
+
+    border-top:4px dashed #f7c948;
+
+    animation:roadMove 1.5s linear infinite;
+}
+
+@keyframes roadMove{
+
+    from{
+        background-position:0;
+    }
+
+    to{
+        background-position:100px;
+    }
+}
+
+
+/* =========================================================
+   TRUCK
+========================================================= */
+
+.truck{
+    position:absolute;
+
+    width:260px;
+    height:130px;
+
+    left:48%;
+    bottom:205px;
+
+    transform:
+        translateX(-50%)
+        rotateY(-8deg)
+        rotateX(4deg);
+
+    animation:truckMove 5s ease-in-out infinite;
+
+    z-index:20;
+}
+
+@keyframes truckMove{
+
+    0%,100%{
+        transform:
+            translateX(-50%)
+            rotateY(-8deg)
+            rotateX(4deg)
+            translateY(0);
+    }
+
+    50%{
+        transform:
+            translateX(-50%)
+            rotateY(-8deg)
+            rotateX(4deg)
+            translateY(-10px);
+    }
+}
+
+
+/* Truck shadow */
+
+.truck::after{
+    content:"";
+
+    position:absolute;
+
+    width:220px;
+    height:30px;
+
+    bottom:-25px;
+    left:20px;
+
+    background:#0008;
+
+    filter:blur(12px);
+
+    border-radius:50%;
+}
+
+
+/* Truck body */
+
+.truck-body{
+    position:absolute;
+
+    width:175px;
+    height:90px;
+
+    left:20px;
+    top:25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2867e8,
+            #1746a4
+        );
+
+    border-radius:10px 5px 5px 10px;
+
+    box-shadow:
+        12px 14px 0 #0a1a36,
+        0 15px 35px #0008;
+}
+
+
+/* Cargo */
+
+.cargo{
+    position:absolute;
+
+    width:135px;
+    height:72px;
+
+    left:20px;
+    top:9px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #20b9f1 0px,
+            #20b9f1 9px,
+            #179bcf 10px,
+            #179bcf 14px
+        );
+
+    border-radius:5px 4px 2px 2px;
+
+    transform:skewY(-2deg);
+
+    box-shadow:
+        inset 0 -5px 10px #08618a;
+}
+
+.cargo::before{
+    content:"LOGIFLEET";
+
+    position:absolute;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+
+    top:28px;
+    left:25px;
+
+    transform:rotate(-90deg);
+}
+
+
+/* Cabin */
+
+.cabin{
+    position:absolute;
+
+    width:75px;
+    height:70px;
+
+    right:0;
+    top:40px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2874ee,
+            #17469f
+        );
+
+    border-radius:8px 12px 4px 4px;
+
+    box-shadow:5px 7px 0 #0a1a36;
+}
+
+
+/* Window */
+
+.window{
+    position:absolute;
+
+    width:48px;
+    height:30px;
+
+    right:9px;
+    top:8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #bceeff,
+            #29759d
+        );
+
+    border-radius:5px;
+
+    border:2px solid #0e3473;
+}
+
+
+/* Front light */
+
+.light{
+    position:absolute;
+
+    right:-3px;
+    top:68px;
+
+    width:8px;
+    height:12px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    box-shadow:
+        0 0 15px #fff,
+        0 0 30px #20b9f1;
+}
+
+
+/* Wheels */
+
+.wheel{
+    position:absolute;
+
+    width:40px;
+    height:40px;
+
+    border-radius:50%;
+
+    background:#080d16;
+
+    border:7px solid #273548;
+
+    bottom:-20px;
+
+    animation:wheelSpin 1s linear infinite;
+}
+
+.wheel::after{
+    content:"";
+
+    position:absolute;
+
+    width:12px;
+    height:12px;
+
+    background:#8290a5;
+
+    border-radius:50%;
+
+    top:7px;
+    left:7px;
+}
+
+.wheel.one{
+    left:48px;
+}
+
+.wheel.two{
+    right:18px;
+}
+
+@keyframes wheelSpin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   WAREHOUSE
+========================================================= */
+
+.warehouse{
+    position:absolute;
+
+    right:15px;
+    top:125px;
+
+    width:190px;
+    height:145px;
+
+    transform:
+        perspective(500px)
+        rotateY(-8deg);
+
+    background:#18263a;
+
+    border:2px solid #29415d;
+
+    box-shadow:
+        20px 25px 40px #0008;
+
+    z-index:8;
+}
+
+.warehouse-roof{
+    position:absolute;
+
+    top:-38px;
+    left:-10px;
+
+    width:210px;
+    height:45px;
+
+    background:#223650;
+
+    transform:skewX(-35deg);
+
+    border-bottom:3px solid #20b9f1;
+}
+
+.warehouse-roof::after{
+    content:"";
+
+    position:absolute;
+
+    left:20px;
+    right:20px;
+
+    bottom:8px;
+
+    border-bottom:2px solid #46627f;
+}
+
+.warehouse-door{
+    position:absolute;
+
+    bottom:0;
+    left:58px;
+
+    width:75px;
+    height:92px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #101a29 0,
+            #101a29 12px,
+            #273a52 13px,
+            #273a52 16px
+        );
+
+    border:3px solid #314b67;
+}
+
+.warehouse-light{
+    position:absolute;
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#20b9f1;
+
+    box-shadow:
+        0 0 12px #20b9f1;
+
+    top:16px;
+
+    animation:warehouseLight 1.5s infinite;
+}
+
+.warehouse-light.one{
+    left:20px;
+}
+
+.warehouse-light.two{
+    right:20px;
+
+    animation-delay:.7s;
+}
+
+@keyframes warehouseLight{
+
+    0%,100%{
+        opacity:.3;
+    }
+
+    50%{
+        opacity:1;
+    }
+}
+
+
+/* =========================================================
+   PACKAGES
+========================================================= */
+
+.package{
+    position:absolute;
+
+    width:35px;
+    height:35px;
+
+    background:#c88945;
+
+    box-shadow:
+        5px 6px 0 #825328;
+
+    transform:rotate(12deg);
+
+    animation:packageFloat 3s ease-in-out infinite;
+
+    z-index:12;
+}
+
+.package::before{
+    content:"+";
+
+    position:absolute;
+
+    color:#623c1f;
+
+    font-size:25px;
+
+    font-weight:bold;
+
+    left:8px;
+    top:3px;
+}
+
+.package.one{
+    right:200px;
+    bottom:225px;
+}
+
+.package.two{
+    right:245px;
+    bottom:260px;
+
+    transform:scale(.75) rotate(-10deg);
+
+    animation-delay:.7s;
+}
+
+.package.three{
+    right:130px;
+    bottom:285px;
+
+    transform:scale(.65) rotate(15deg);
+
+    animation-delay:1.2s;
+}
+
+@keyframes packageFloat{
+
+    0%,100%{
+        translate:0 0;
+    }
+
+    50%{
+        translate:0 -14px;
+    }
+}
+
+
+/* =========================================================
+   ROUTE
+========================================================= */
+
+.route{
+    position:absolute;
+
+    width:330px;
+    height:170px;
+
+    right:120px;
+    top:235px;
+
+    border-top:2px dashed #20b9f1;
+
+    border-radius:50%;
+
+    transform:rotate(-15deg);
+
+    opacity:.8;
+
+    animation:routePulse 2s infinite;
+
+    z-index:4;
+}
+
+@keyframes routePulse{
+
+    0%,100%{
+        opacity:.3;
+    }
+
+    50%{
+        opacity:1;
+    }
+}
+
+
+/* =========================================================
+   LOCATION POINTS
+========================================================= */
+
+.location{
+    position:absolute;
+
+    width:14px;
+    height:14px;
+
+    background:#20b9f1;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 0 5px #20b9f122,
+        0 0 20px #20b9f1;
+
+    animation:pulse 1.8s infinite;
+
+    z-index:10;
+}
+
+.location.one{
+    right:405px;
+    top:300px;
+}
+
+.location.two{
+    right:120px;
+    top:235px;
+
+    animation-delay:.7s;
+}
+
+@keyframes pulse{
+
+    0%{
+        box-shadow:
+            0 0 0 0 #20b9f155,
+            0 0 15px #20b9f1;
+    }
+
+    70%{
+        box-shadow:
+            0 0 0 18px #20b9f100,
+            0 0 25px #20b9f1;
+    }
+
+    100%{
+        box-shadow:
+            0 0 0 0 #20b9f100,
+            0 0 15px #20b9f1;
+    }
+}
+
+
+/* =========================================================
+   FLOATING DATA CARDS
+========================================================= */
+
+.data-card{
+    position:absolute;
+
+    background:#101c2eee;
+
+    border:1px solid #ffffff1a;
+
+    backdrop-filter:blur(12px);
+
+    border-radius:10px;
+
+    padding:13px 17px;
+
+    box-shadow:
+        0 15px 35px #0008;
+
+    animation:cardFloat 4s ease-in-out infinite;
+
+    z-index:50;
+}
+
+.data-card small{
+    color:#91a4bc;
+
+    font-size:10px;
+
+    display:block;
+
+    margin-bottom:4px;
+}
+
+.data-card strong{
+    color:white;
+
+    font-size:17px;
+}
+
+.data-card span{
+    color:#20b9f1;
+
+    font-size:11px;
+
+    margin-left:5px;
+}
+
+.card-speed{
+    left:20px;
+    top:120px;
+}
+
+.card-delivery{
+    right:20px;
+    top:55px;
+
+    animation-delay:1s;
+}
+
+.card-fleet{
+    left:50px;
+    bottom:85px;
+
+    animation-delay:1.8s;
+}
+
+@keyframes cardFloat{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-12px);
+    }
+}
+
+
+/* =========================================================
+   DECORATIVE DOTS
+========================================================= */
+
+.dot{
+    position:absolute;
+
+    width:4px;
+    height:4px;
+
+    background:#20b9f1;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 10px #20b9f1;
+
+    animation:dotBlink 2s infinite;
+}
+
+.dot.d1{
+    left:12%;
+    top:30%;
+}
+
+.dot.d2{
+    left:76%;
+    top:18%;
+
+    animation-delay:.5s;
+}
+
+.dot.d3{
+    right:5%;
+    bottom:30%;
+
+    animation-delay:1s;
+}
+
+.dot.d4{
+    left:38%;
+    bottom:18%;
+
+    animation-delay:1.5s;
+}
+
+@keyframes dotBlink{
+
+    0%,100%{
+        opacity:.2;
+    }
+
+    50%{
+        opacity:1;
+    }
+}
+
+
+/* =========================================================
+   SERVICES
+========================================================= */
+
+section{
+    padding:80px 8%;
+}
+
+.title{
+    text-align:center;
+    margin-bottom:45px;
+}
+
+.title h2{
+    font-size:38px;
+    margin-bottom:12px;
+}
+
+.title span{
+    color:#20b9f1;
+}
+
+.title p{
+    color:#64748b;
+}
+
+.services{
+    background:#f5f7fa;
+}
+
+.service-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:25px;
+
+    max-width:1200px;
+
+    margin:auto;
+}
+
+.service{
+    background:white;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 5px 25px #0000000c;
+
+    transition:.3s;
+}
+
+.service:hover{
+    transform:translateY(-8px);
+
+    box-shadow:
+        0 15px 35px #00000015;
+}
+
+.service img{
+    width:100%;
+    height:210px;
+
+    object-fit:cover;
+}
+
+.service div{
+    padding:23px;
+}
+
+.service h3{
+    margin-bottom:10px;
+}
+
+.service p{
+    color:#64748b;
+    line-height:1.6;
+}
+
+.service a{
+    display:inline-block;
+
+    color:#2867e8;
+
+    font-weight:bold;
+
+    margin-top:15px;
+}
+
+
+/* =========================================================
+   VIDEO SECTION
+========================================================= */
+
+.video-section{
+    background:#111827;
+
+    color:white;
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:50px;
+
+    align-items:center;
+}
+
+.video-section h2{
+    font-size:40px;
+    margin-bottom:18px;
+}
+
+.video-section h2 span{
+    color:#20b9f1;
+}
+
+.video-section p{
+    color:#b8c4d5;
+
+    line-height:1.7;
+
+    margin-bottom:25px;
+}
+
+.video{
+    width:100%;
+    height:350px;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    background:#000;
+
+    box-shadow:
+        0 15px 40px #0007;
+}
+
+.video iframe{
+    width:100%;
+    height:100%;
+
+    border:0;
+}
+
+
+/* =========================================================
+   TRACKING
+========================================================= */
+
+.tracking{
+    background:#eef7fc;
+
+    text-align:center;
+}
+
+.tracking h2{
+    font-size:36px;
+
+    margin-bottom:12px;
+}
+
+.tracking p{
+    color:#64748b;
+
+    margin-bottom:25px;
+}
+
+.track-box{
+    max-width:600px;
+
+    margin:auto;
+
+    display:flex;
+
+    gap:10px;
+}
+
+.track-box input{
+    flex:1;
+
+    padding:15px;
+
+    border:1px solid #ccd5e1;
+
+    border-radius:7px;
+
+    font-size:15px;
+
+    outline:none;
+}
+
+.track-box input:focus{
+    border-color:#2867e8;
+
+    box-shadow:
+        0 0 0 3px #2867e822;
+}
+
+.track-box button{
+    background:#2867e8;
+
+    color:white;
+
+    border:0;
+
+    padding:15px 25px;
+
+    border-radius:7px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.track-box button:hover{
+    background:#1f56c7;
+
+    transform:translateY(-2px);
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.cta{
+    text-align:center;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            #0b1830dd,
+            #0b1830dd
+        ),
+        url(
+        "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1800&q=85"
+        )
+        center/cover;
+}
+
+.cta h2{
+    font-size:40px;
+
+    margin-bottom:15px;
+}
+
+.cta p{
+    color:#d0d9e7;
+
+    margin-bottom:25px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    background:#0b1120;
+
+    color:#9daabd;
+
+    padding:35px 8%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+footer strong{
+    color:white;
+
+    font-size:20px;
+}
+
+footer span{
+    color:#20b9f1;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1150px){
+
+    .hero-content{
+        grid-template-columns:1fr;
+    }
+
+    .hero-text{
+        padding-top:50px;
+    }
+
+    .scene{
+        height:500px;
+
+        margin-top:-40px;
+    }
+
+    h1{
+        font-size:62px;
+    }
+}
+
+
+@media(max-width:900px){
+
+    nav ul li:not(:last-child){
+        display:none;
+    }
+
+    nav ul{
+        gap:10px;
+    }
+
+    h1{
+        font-size:52px;
+    }
+
+    .service-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .video-section{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        gap:25px;
+    }
+
+    .scene{
+        transform:scale(.9);
+        transform-origin:center;
+    }
+}
+
+
+@media(max-width:600px){
+
+    nav{
+        padding:0 5%;
+    }
+
+    .logo{
+        font-size:23px;
+    }
+
+    .hero-content{
+        width:90%;
+    }
+
+    h1{
+        font-size:43px;
+    }
+
+    .hero p{
+        font-size:16px;
+    }
+
+    .buttons{
+        flex-direction:column;
+
+        width:200px;
+    }
+
+    .stats{
+        flex-wrap:wrap;
+    }
+
+    .service-grid{
+        grid-template-columns:1fr;
+    }
+
+    .track-box{
+        flex-direction:column;
+    }
+
+    .video{
+        height:250px;
+    }
+
+    footer{
+        flex-direction:column;
+
+        gap:15px;
+
+        text-align:center;
+    }
+
+    .scene{
+        height:380px;
+
+        transform:scale(.65);
+
+        transform-origin:center;
+
+        width:150%;
+
+        margin-left:-25%;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =======================================================
+     NAVBAR
+======================================================= -->
+
+<nav>
+
+    <div class="logo">
+        Logi<span>Fleet</span>
+    </div>
+
+    <ul>
+
+        <li>
+            <a href="index.html">
+                Home
+            </a>
+        </li>
+
+        <li>
+            <a href="fleet.html">
+                Fleet
+            </a>
+        </li>
+
+        <li>
+            <a href="warehouse.html">
+                Warehouse
+            </a>
+        </li>
+
+        <li>
+            <a href="shipments.html">
+                Shipments
+            </a>
+        </li>
+
+        <li>
+            <a href="transport.html">
+                Transport
+            </a>
+        </li>
+
+        <li>
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="login.html" class="login">
+                Login
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+
+<!-- =======================================================
+     HERO SECTION
+======================================================= -->
+
+<section class="hero">
+
+<div class="hero-content">
+
+
+    <!-- LEFT CONTENT -->
+
+    <div class="hero-text">
+
+        <div class="tag">
+            🚚 SMART LOGISTICS MANAGEMENT
+        </div>
+
+
+        <h1>
+            Move Cargo.<br>
+            Manage <span>Everything.</span>
+        </h1>
+
+
+        <p>
+            A unified platform for managing fleets,
+            warehouses, shipments and public transportation
+            — all from one place.
+        </p>
+
+
+        <div class="buttons">
+
+            <a
+                href="dashboard.html"
+                class="btn primary"
+            >
+                Open Dashboard →
+            </a>
+
+
+            <a
+                href="#services"
+                class="btn secondary"
+            >
+                Explore Services
+            </a>
+
+        </div>
+
+
+        <div class="stats">
+
+            <div>
+
+                <h2>
+                    250+
+                </h2>
+
+                <p>
+                    Vehicles
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h2>
+                    35+
+                </h2>
+
+                <p>
+                    Warehouses
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h2>
+                    12K+
+                </h2>
+
+                <p>
+                    Shipments
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h2>
+                    50+
+                </h2>
+
+                <p>
+                    Routes
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================================
+         3D LOGISTICS ANIMATION
+    ==================================================== -->
+
+    <div class="scene">
+
+
+        <!-- FLOATING CARD 1 -->
+
+        <div class="data-card card-speed">
+
+            <small>
+                LIVE VEHICLE SPEED
+            </small>
+
+            <strong>
+                72 km/h
+            </strong>
+
+            <span>
+                ● LIVE
+            </span>
+
+        </div>
+
+
+        <!-- FLOATING CARD 2 -->
+
+        <div class="data-card card-delivery">
+
+            <small>
+                DELIVERY STATUS
+            </small>
+
+            <strong>
+                On Route
+            </strong>
+
+            <span>
+                ↗
+            </span>
+
+        </div>
+
+
+        <!-- FLOATING CARD 3 -->
+
+        <div class="data-card card-fleet">
+
+            <small>
+                ACTIVE FLEET
+            </small>
+
+            <strong>
+                184 / 250
+            </strong>
+
+            <span>
+                82%
+            </span>
+
+        </div>
+
+
+
+        <!-- WAREHOUSE -->
+
+        <div class="warehouse">
+
+            <div class="warehouse-roof"></div>
+
+            <div class="warehouse-light one"></div>
+
+            <div class="warehouse-light two"></div>
+
+            <div class="warehouse-door"></div>
+
+        </div>
+
+
+
+        <!-- ROUTE -->
+
+        <div class="route"></div>
+
+
+        <!-- LOCATION MARKERS -->
+
+        <div class="location one"></div>
+
+        <div class="location two"></div>
+
+
+
+        <!-- PACKAGES -->
+
+        <div class="package one"></div>
+
+        <div class="package two"></div>
+
+        <div class="package three"></div>
+
+
+
+        <!-- 3D GROUND -->
+
+        <div class="ground"></div>
+
+
+        <!-- ROAD -->
+
+        <div class="road"></div>
+
+
+
+        <!-- =================================================
+             3D TRUCK
+        ================================================== -->
+
+        <div class="truck">
+
+
+            <div class="truck-body">
+
+                <div class="cargo"></div>
+
+            </div>
+
+
+            <div class="cabin">
+
+                <div class="window"></div>
+
+            </div>
+
+
+            <div class="light"></div>
+
+
+            <div class="wheel one"></div>
+
+            <div class="wheel two"></div>
+
+
+        </div>
+
+
+
+        <!-- DECORATIVE LIGHTS -->
+
+        <div class="dot d1"></div>
+
+        <div class="dot d2"></div>
+
+        <div class="dot d3"></div>
+
+        <div class="dot d4"></div>
+
+
+    </div>
+
+</div>
+
+</section>
+
+
+
+<!-- =======================================================
+     SERVICES
+======================================================= -->
+
+<section
+    class="services"
+    id="services"
+>
+
+<div class="title">
+
+    <h2>
+        Everything Your
+        <span>Logistics</span>
+        Needs
+    </h2>
+
+    <p>
+        One platform for your entire
+        transportation operation.
+    </p>
+
+</div>
+
+
+<div class="service-grid">
+
+
+    <!-- SERVICE 1 -->
+
+    <div class="service">
+
+        <img
+        src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=900&q=80"
+        alt="Fleet Management"
+        >
+
+        <div>
+
+            <h3>
+                Fleet Management
+            </h3>
+
+            <p>
+                Monitor vehicles, drivers,
+                routes and fleet activity
+                from a centralized system.
+            </p>
+
+            <a href="fleet.html">
+                Manage Fleet →
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- SERVICE 2 -->
+
+    <div class="service">
+
+        <img
+        src="https://images.unsplash.com/photo-1586528116493-da8b6e0f2b1d?auto=format&fit=crop&w=900&q=80"
+        alt="Warehouse Management"
+        >
+
+        <div>
+
+            <h3>
+                Warehouse Management
+            </h3>
+
+            <p>
+                Track inventory, warehouse
+                capacity and stock movements
+                efficiently.
+            </p>
+
+            <a href="warehouse.html">
+                View Warehouse →
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- SERVICE 3 -->
+
+    <div class="service">
+
+        <img
+        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=900&q=80"
+        alt="Shipment Tracking"
+        >
+
+        <div>
+
+            <h3>
+                Shipment Tracking
+            </h3>
+
+            <p>
+                Follow shipments from dispatch
+                to delivery with simple
+                tracking tools.
+            </p>
+
+            <a href="shipments.html">
+                Track Shipments →
+            </a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- =======================================================
+     VIDEO
+======================================================= -->
+
+<section class="video-section">
+
+
+<div>
+
+    <h2>
+        See Logistics<br>
+        <span>In Motion.</span>
+    </h2>
+
+
+    <p>
+        From warehouse loading to fleet
+        operations, LogiFleet brings every
+        part of the supply chain together
+        in one connected platform.
+    </p>
+
+
+    <a
+        href="transport.html"
+        class="btn primary"
+    >
+        Explore Transport →
+    </a>
+
+</div>
+
+
+
+<div class="video">
+
+    <iframe
+        src="https://www.youtube.com/embed/4VTQnye4Q6g"
+        title="Logistics Management"
+        allowfullscreen>
+    </iframe>
+
+</div>
+
+
+</section>
+
+
+
+<!-- =======================================================
+     SHIPMENT TRACKING
+======================================================= -->
+
+<section class="tracking">
+
+    <h2>
+        Track Your Shipment
+    </h2>
+
+
+    <p>
+        Enter your shipment ID to quickly
+        find its current status.
+    </p>
+
+
+    <div class="track-box">
+
+        <input
+            type="text"
+            id="homeTrackInput"
+            placeholder="Enter Shipment ID e.g. SHP-1001"
+            onkeydown="if(event.key==='Enter') document.getElementById('homeTrackBtn').click()"
+        >
+
+
+        <button id="homeTrackBtn" onclick="trackHomeShipment()">
+            Track Shipment
+        </button>
+
+    </div>
+
+    <div id="homeTrackResult" style="display:none;max-width:650px;margin:25px auto 0;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;text-align:left;box-shadow:0 10px 30px #0001;">
+        <!-- Populated via JS -->
+    </div>
+
+</section>
+
+
+
+<!-- =======================================================
+     CTA
+======================================================= -->
+
+<section class="cta">
+
+    <h2>
+        One Platform. Complete Visibility.
+    </h2>
+
+
+    <p>
+        Manage your fleet, warehouse,
+        shipments and transport from
+        a single dashboard.
+    </p>
+
+
+    <a
+        href="dashboard.html"
+        class="btn primary"
+    >
+        Go to Dashboard →
+    </a>
+
+</section>
+
+
+
+<!-- =======================================================
+     FOOTER
+======================================================= -->
+
+<footer>
+
+    <div>
+
+        <strong>
+            Logi<span>Fleet</span>
+        </strong>
+
+    </div>
+
+
+    <div>
+
+        © 2026 LogiFleet.
+        All rights reserved.
+
+    </div>
+
+</footer>
+
+<script src="api.js"></script>
+<script>
+async function trackHomeShipment() {
+    const input = document.getElementById('homeTrackInput');
+    const id = input.value.trim();
+    if (!id) {
+        showToast('Please enter a Shipment ID (e.g. SHP-1001)', 'warning');
+        return;
+    }
+
+    const resultBox = document.getElementById('homeTrackResult');
+    const btn = document.getElementById('homeTrackBtn');
+    btn.disabled = true;
+    btn.innerText = 'Tracking...';
+
+    try {
+        const res = await LogiFleetAPI.get(`/shipments/track/${encodeURIComponent(id)}`);
+        if (!res.success) throw new Error(res.message);
+
+        const s = res.data;
+        resultBox.style.display = 'block';
+
+        let badgeColor = '#2563eb';
+        let badgeBg = '#dbeafe';
+        if (s.status === 'Delivered') { badgeColor = '#16a34a'; badgeBg = '#dcfce7'; }
+        if (s.status === 'Pending') { badgeColor = '#d97706'; badgeBg = '#fef3c7'; }
+
+        resultBox.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e2e8f0;padding-bottom:14px;margin-bottom:14px;">
+                <div>
+                    <h3 style="font-size:20px;color:#0f172a;margin:0;">${escapeHtml(s.shipmentId)}</h3>
+                    <small style="color:#64748b;">Customer: <strong>${escapeHtml(s.customer)}</strong></small>
+                </div>
+                <span style="color:${badgeColor};background:${badgeBg};padding:6px 14px;border-radius:20px;font-size:13px;font-weight:bold;">
+                    ${escapeHtml(s.status)}
+                </span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px;color:#334155;margin-bottom:16px;">
+                <div>📍 <strong>Origin:</strong> ${escapeHtml(s.origin || 'Central Hub')}</div>
+                <div>🏁 <strong>Destination:</strong> ${escapeHtml(s.destination)}</div>
+                <div>👤 <strong>Driver:</strong> ${escapeHtml(s.driver)}</div>
+                <div>🚚 <strong>Vehicle:</strong> ${escapeHtml(s.vehicle || 'LF-001')}</div>
+            </div>
+            <div style="text-align:right;">
+                <a href="shipments.html" style="color:#2867e8;font-weight:bold;font-size:13px;">View Full History & Details →</a>
+            </div>
+        `;
+
+        showToast(`Tracking status for ${s.shipmentId} loaded.`, 'success');
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (err) {
+        showToast(err.message || 'Shipment not found', 'error');
+        resultBox.style.display = 'none';
+    } finally {
+        btn.disabled = false;
+        btn.innerText = 'Track Shipment';
+    }
+}
+</script>
+</body>
+</html>

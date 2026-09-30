@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LogiFleet - Dashboard</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial;background:#f4f7fb;color:#172033}
+
+nav{
+height:80px;background:#151c30;display:flex;
+align-items:center;justify-content:space-between;
+padding:0 10%;color:white
+}
+
+.logo{font-size:30px;font-weight:bold}
+.logo span{color:#20b9f1}
+
+nav ul{display:flex;gap:30px;list-style:none;align-items:center}
+nav a{color:#ddd;text-decoration:none;font-weight:bold}
+nav a:hover{color:#20b9f1}
+
+.login{
+background:#2867e8;
+padding:12px 22px;
+border-radius:8px
+}
+
+.container{
+width:80%;
+max-width:1200px;
+margin:40px auto
+}
+
+.header{
+margin-bottom:30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.header h1{
+font-size:38px;
+margin-bottom:8px
+}
+
+.header p{color:#64748b}
+
+.refresh-btn{
+background:white;
+border:1px solid #cbd5e1;
+padding:10px 18px;
+border-radius:7px;
+cursor:pointer;
+font-weight:bold;
+color:#334155;
+transition:.2s;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.refresh-btn:hover{
+background:#f1f5f9;
+border-color:#94a3b8;
+}
+
+/* CARDS */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+margin-bottom:30px
+}
+
+.card{
+background:white;
+padding:22px;
+border-radius:10px;
+box-shadow:0 5px 20px #0001;
+transition:transform .2s;
+}
+
+.card:hover{
+transform:translateY(-3px);
+}
+
+.card p{color:#64748b}
+.card h2{font-size:30px;margin:10px 0;color:#111827}
+
+/* CONTENT */
+
+.grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px
+}
+
+.box{
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 5px 20px #0001
+}
+
+.box h2{margin-bottom:20px}
+
+/* PROGRESS */
+
+.item{margin-bottom:20px}
+
+.item p{
+display:flex;
+justify-content:space-between;
+margin-bottom:8px
+}
+
+.progress{
+height:9px;
+background:#e5e7eb;
+border-radius:10px;
+overflow:hidden
+}
+
+.progress span{
+display:block;
+height:100%;
+background:#2867e8;
+transition:width 0.8s ease;
+}
+
+/* ACTIVITY */
+
+.activity{
+display:flex;
+gap:12px;
+padding:14px 0;
+border-bottom:1px solid #eee
+}
+
+.activity:last-child{
+border-bottom:none;
+}
+
+.dot{
+width:10px;
+height:10px;
+background:#20b9f1;
+border-radius:50%;
+margin-top:5px;
+flex-shrink:0;
+}
+
+.activity p{font-size:14px}
+.activity small{color:#94a3b8}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+nav ul li:not(:last-child){display:none}
+.container{width:90%}
+.cards{grid-template-columns:1fr 1fr}
+.grid{grid-template-columns:1fr}
+}
+
+@media(max-width:600px){
+.cards{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+<div class="logo">
+Logi<span>Fleet</span>
+</div>
+
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="fleet.html">Fleet</a></li>
+<li><a href="warehouse.html">Warehouse</a></li>
+<li><a href="shipments.html">Shipments</a></li>
+<li><a href="transport.html">Transport</a></li>
+<li><a href="dashboard.html" style="color:#20b9f1">Dashboard</a></li>
+<li><a href="login.html" class="login">Login</a></li>
+</ul>
+
+</nav>
+
+
+<div class="container">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div>
+    <h1 id="dashboardGreeting">Dashboard</h1>
+    <p id="dashboardSubtitle">Welcome to your LogiFleet management dashboard.</p>
+</div>
+
+<button class="refresh-btn" onclick="fetchDashboardData()">
+    ↻ Refresh Data
+</button>
+
+</div>
+
+
+<!-- SUMMARY CARDS -->
+
+<div class="cards">
+
+<div class="card">
+<p>Total Vehicles</p>
+<h2 id="cardTotalVehicles">...</h2>
+<p id="cardActiveVehicles">Loading...</p>
+</div>
+
+<div class="card">
+<p>Warehouses</p>
+<h2 id="cardTotalWarehouses">...</h2>
+<p id="cardStoredItems">Loading...</p>
+</div>
+
+<div class="card">
+<p>Shipments</p>
+<h2 id="cardTotalShipments">...</h2>
+<p id="cardInTransitShipments">Loading...</p>
+</div>
+
+<div class="card">
+<p>Routes</p>
+<h2 id="cardTotalRoutes">...</h2>
+<p id="cardActiveRoutes">Loading...</p>
+</div>
+
+</div>
+
+
+<!-- LOWER CONTENT -->
+
+<div class="grid">
+
+
+<!-- OPERATIONS -->
+
+<div class="box">
+
+<h2>Operations Overview</h2>
+
+<div class="item">
+
+<p>
+<span>Fleet Utilization</span>
+<span id="fleetUtilPercent">0%</span>
+</p>
+
+<div class="progress">
+<span id="fleetUtilBar" style="width:0%"></span>
+</div>
+
+</div>
+
+
+<div class="item">
+
+<p>
+<span>Warehouse Capacity</span>
+<span id="whCapPercent">0%</span>
+</p>
+
+<div class="progress">
+<span id="whCapBar" style="width:0%"></span>
+</div>
+
+</div>
+
+
+<div class="item">
+
+<p>
+<span>Shipment Completion</span>
+<span id="shipCompPercent">0%</span>
+</p>
+
+<div class="progress">
+<span id="shipCompBar" style="width:0%"></span>
+</div>
+
+</div>
+
+
+<div class="item">
+
+<p>
+<span>Transport Capacity</span>
+<span id="transCapPercent">0%</span>
+</p>
+
+<div class="progress">
+<span id="transCapBar" style="width:0%"></span>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ACTIVITY -->
+
+<div class="box">
+
+<h2>Recent Activity</h2>
+
+<div id="recentActivityList">
+    <div style="padding:20px;text-align:center;color:#94a3b8;">
+        Loading live activities...
+    </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="api.js"></script>
+
+<script>
+// Format numbers with commas (e.g. 12,450)
+function fmt(num) {
+    if (num === undefined || num === null) return '0';
+    return Number(num).toLocaleString();
+}
+
+async function fetchDashboardData() {
+    try {
+        const user = LogiFleetAuth.getUser();
+        if (user) {
+            document.getElementById('dashboardGreeting').innerText = `Welcome back, ${user.name.split(' ')[0]}!`;
+            document.getElementById('dashboardSubtitle').innerText = `Real-time logistics analytics & operational metrics (${user.role.toUpperCase()} view)`;
+        }
+
+        const res = await LogiFleetAPI.get('/dashboard/stats');
+        if (!res.success) throw new Error(res.message);
+
+        const { stats, recentActivity } = res;
+
+        // Populate Summary Cards
+        document.getElementById('cardTotalVehicles').innerText = fmt(stats.vehicles.total);
+        document.getElementById('cardActiveVehicles').innerText = `${fmt(stats.vehicles.active)} currently active`;
+
+        document.getElementById('cardTotalWarehouses').innerText = fmt(stats.warehouses.total);
+        document.getElementById('cardStoredItems').innerText = `${fmt(stats.warehouses.storedItems)} items stored`;
+
+        document.getElementById('cardTotalShipments').innerText = fmt(stats.shipments.total);
+        document.getElementById('cardInTransitShipments').innerText = `${fmt(stats.shipments.inTransit)} in transit`;
+
+        document.getElementById('cardTotalRoutes').innerText = fmt(stats.routes.total);
+        document.getElementById('cardActiveRoutes').innerText = `${fmt(stats.routes.activeToday)} active today`;
+
+        // Operations Bars
+        const op = stats.operations;
+        document.getElementById('fleetUtilPercent').innerText = `${op.fleetUtilization}%`;
+        document.getElementById('fleetUtilBar').style.width = `${op.fleetUtilization}%`;
+
+        document.getElementById('whCapPercent').innerText = `${op.warehouseCapacity}%`;
+        document.getElementById('whCapBar').style.width = `${op.warehouseCapacity}%`;
+
+        document.getElementById('shipCompPercent').innerText = `${op.shipmentCompletion}%`;
+        document.getElementById('shipCompBar').style.width = `${op.shipmentCompletion}%`;
+
+        document.getElementById('transCapPercent').innerText = `${op.transportCapacity}%`;
+        document.getElementById('transCapBar').style.width = `${op.transportCapacity}%`;
+
+        // Render Activity Feed
+        const activityContainer = document.getElementById('recentActivityList');
+        if (recentActivity && recentActivity.length > 0) {
+            activityContainer.innerHTML = recentActivity.map(act => `
+                <div class="activity">
+                    <div class="dot" style="background:${act.dotColor || '#20b9f1'}"></div>
+                    <div>
+                        <p style="font-weight:600;color:#1e293b;">${escapeHtml(act.title)}</p>
+                        ${act.description ? `<p style="font-size:12px;color:#64748b;margin:2px 0;">${escapeHtml(act.description)}</p>` : ''}
+                        <small>${escapeHtml(act.timeAgo || 'Recently')}</small>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            activityContainer.innerHTML = `
+                <div style="padding:20px;text-align:center;color:#94a3b8;">
+                    No recent activities recorded.
+                </div>
+            `;
+        }
+
+    } catch (err) {
+        console.error('Failed to fetch dashboard data:', err);
+        showToast('Unable to load dashboard stats from backend', 'error');
+    }
+}
+
+// Fetch on load
+document.addEventListener('DOMContentLoaded', fetchDashboardData);
+</script>
+
+</body>
+</html>
